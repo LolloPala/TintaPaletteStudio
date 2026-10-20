@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Tinta — Color palette studio</title>
+    <link rel="stylesheet" href="tinta-palette.css">
+  </head>
+  <body>
+    <header>
+      <div class="logo">tinta<span>.</span></div>
+      <div class="header-right">
+        <button class="on" data-go="generator">Palette</button>
+        <button data-go="contrast">Contrasto</button>
+        <button data-go="saved">Salvate</button>
+      </div>
+    </header>
+    <main>
+      <div class="eyebrow">Color palette studio · sRGB</div>
+      <section class="hero">
+        <div>
+          <h1>Il colore giusto,<br>senza complicazioni.</h1>
+          <p>
+            Genera, combina e salva palette. Blocca i colori che vuoi tenere.
+          </p>
+        </div>
+        <div class="actions">
+          <button class="btn" id="saveBtn">♡ Salva palette</button>
+          <button class="btn primary" id="generateBtn">
+            ↻ Genera palette <span class="kbd">SPAZIO</span>
+          </button>
+        </div>
+      </section>
+      <section id="generator">
+        <div class="formatbar">
+          <label for="valueFormat">Visualizza valori</label><select
+            id="valueFormat"
+          >
+            <option value="hex">Esadecimale · HEX</option>
+            <option value="rgb">RGB · 0–255</option>
+            <option value="unit">sRGB · 0–1</option>
+          </select>
+        </div>
+        <div class="palette" id="palette"></div>
+        <div class="hint">
+          Premi <b>SPAZIO</b> per generare · clicca sul valore per copiarlo ·
+          usa il lucchetto per fissare un colore · trascina per riordinare
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Personalizza</h2>
+            <div class="sub">
+              Scegli lo stile della palette e il colore di partenza.
+            </div>
+          </div>
+          <button class="btn" id="shuffleBtn">Mescola ↻</button>
+        </div>
+        <div class="grid">
+          <label class="field">Numero di colori<select id="count">
+              <option>3</option>
+              <option>4</option>
+              <option selected>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+            </select></label><label class="field">Armonia cromatica<select
+              id="mode"
+            >
+              <option value="random">Casuale</option>
+              <option value="analogous">Analoghi</option>
+              <option value="complementary">Complementari</option>
+              <option value="triadic">Triadici</option>
+              <option value="mono">Monocromatici</option>
+            </select></label><label class="field">Colore di partenza<div
+              class="color-input"
+            >
+              <input
+                type="color"
+                id="seed"
+                value="#6558F5"
+                aria-label="Scegli colore sRGB"
+              ><input
+                type="text"
+                id="seedHex"
+                value="#6558F5"
+                maxlength="7"
+                aria-label="Codice HEX"
+              >
+            </div></label>
+        </div>
+      </section>
+      <section class="panel" id="contrast">
+        <div class="panel-head">
+          <div>
+            <h2>Controllo del contrasto</h2>
+            <div class="sub">
+              Controlla la leggibilità del testo secondo le soglie WCAG.
+            </div>
+          </div>
+        </div>
+        <div class="grid" style="margin-bottom: 15px">
+          <label class="field">Testo<select id="fg"></select></label><label
+            class="field"
+          >Sfondo<select id="bg"></select></label><label
+            class="field"
+          >Dimensione<select id="textSize">
+              <option value="normal">Testo normale</option>
+              <option value="large">Testo grande</option>
+            </select></label>
+        </div>
+        <div class="contrast-layout">
+          <div class="preview" id="preview">
+            <strong>Il colore comunica.</strong><span>Un contrasto corretto
+              migliora la leggibilità.</span>
+          </div>
+          <div>
+            <div class="eyebrow">Rapporto di contrasto</div>
+            <div
+              id="ratio"
+              style="font-size: 38px; font-weight: 900; letter-spacing: -1px; margin: 8px 0"
+            >
+              —
+            </div>
+            <div id="results" class="tags"></div>
+            <p class="sub">
+              WCAG AA: 4,5:1 testo normale, 3:1 testo grande. AAA: 7:1 e 4,5:1.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section class="panel" id="saved">
+        <div class="panel-head">
+          <div>
+            <h2>Le tue palette</h2>
+            <div class="sub">Salvate localmente in questo browser.</div>
+          </div>
+          <button class="btn" id="exportBtn">Esporta JSON ↓</button>
+        </div>
+        <div class="saved-grid" id="savedGrid"></div>
+        <p class="sub" id="empty">
+          Non hai ancora salvato palette. Premi “Salva palette” per conservarne
+          una.
+        </p>
+      </section>
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Esporta e condividi</h2>
+            <div class="sub">
+              Scarica i colori o copiali nel formato che preferisci.
+            </div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn" id="copyValues">Copia valori visualizzati</button>
+          <button class="btn" id="copyCss">Copia CSS</button>
+          <button class="btn" id="copyScss">Copia SCSS</button>
+          <button class="btn" id="copyJson">Copia JSON</button>
+          <button class="btn" id="shareBtn">Copia link</button>
+          <button class="btn" id="downloadCss">Scarica CSS</button>
+          <button class="btn" id="downloadSvg">Scarica SVG</button>
+          <button class="btn" id="downloadAse">Scarica ASE</button>
+        </div>
+      </section>
+      <div class="footer">
+        Tinta · palette sRGB · file statico, nessun account richiesto.
+      </div>
+    </main>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="tinta-palette.js"></script>
+  </body>
+</html>
