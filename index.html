@@ -71,7 +71,10 @@
               <option value="random">Casuale</option>
               <option value="analogous">Analoghi</option>
               <option value="complementary">Complementari</option>
+              <option value="splitComplementary">Complementari divisi</option>
               <option value="triadic">Triadici</option>
+              <option value="tetradic">Tetradici</option>
+              <option value="square">Quadrati</option>
               <option value="mono">Monocromatici</option>
             </select></label><label class="field">Colore di partenza<div
               class="color-input"
@@ -89,6 +92,37 @@
                 aria-label="Codice HEX"
               >
             </div></label>
+        </div>
+      </section>
+      <section class="panel" id="adjustments">
+        <div class="panel-head">
+          <div>
+            <h2>Regolazioni</h2>
+            <div class="sub">
+              Regola l'intera palette e confronta il risultato in tempo reale.
+            </div>
+          </div>
+        </div>
+        <div class="adjustments-layout">
+          <div class="adjustment-palettes" aria-label="Confronto palette">
+            <div class="adjustment-palette">
+              <div class="eyebrow">Palette corrente</div>
+              <div class="mini-palette" id="originalPalette"></div>
+            </div>
+            <div class="adjustment-palette">
+              <div class="eyebrow">Risultato</div>
+              <div class="mini-palette" id="adjustedPalette"></div>
+            </div>
+          </div>
+          <div class="adjustment-controls">
+            <label class="range-field" for="hueAdjust">Tinta <output id="hueAdjustValue">0°</output><input id="hueAdjust" type="range" min="-180" max="180" value="0"></label>
+            <label class="range-field" for="temperatureAdjust">Temperatura <output id="temperatureAdjustValue">0</output><input id="temperatureAdjust" type="range" min="-100" max="100" value="0"></label>
+            <label class="range-field" for="saturationAdjust">Saturazione <output id="saturationAdjustValue">0%</output><input id="saturationAdjust" type="range" min="-100" max="100" value="0"></label>
+            <label class="range-field" for="lightnessAdjust">Luminosità <output id="lightnessAdjustValue">0%</output><input id="lightnessAdjust" type="range" min="-100" max="100" value="0"></label>
+          </div>
+        </div>
+        <div class="adjustment-action">
+          <button class="btn primary" id="applyAdjustments">Imposta il risultato come palette corrente</button>
         </div>
       </section>
       <section class="panel" id="contrast">

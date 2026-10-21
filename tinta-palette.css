@@ -246,6 +246,76 @@ main {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
+.adjustments-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(230px, .65fr);
+  gap: 24px;
+  align-items: start;
+}
+.adjustment-palettes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.adjustment-palette .eyebrow {
+  margin-bottom: 8px;
+}
+.mini-palette {
+  height: 185px;
+  display: flex;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fafaf8;
+}
+.mini-swatch {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  padding: 8px 3px;
+}
+.mini-swatch span {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 5px;
+  padding: 5px 2px;
+  background: #ffffffe0;
+  color: #171719;
+  font-size: 9px;
+  font-weight: 800;
+  text-align: center;
+}
+.adjustment-controls {
+  display: grid;
+  gap: 14px;
+}
+.range-field {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 7px 12px;
+  align-items: center;
+  color: #62626b;
+  font-size: 12px;
+  font-weight: 750;
+}
+.range-field output {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.range-field input {
+  grid-column: 1 / -1;
+  width: 100%;
+  accent-color: var(--accent);
+}
+.adjustment-action {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 18px;
+}
 .field {
   font-size: 12px;
   font-weight: 750;
@@ -462,6 +532,13 @@ main {
   }
   .grid {
     grid-template-columns: 1fr;
+  }
+  .adjustments-layout {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .mini-palette {
+    height: 145px;
   }
   .contrast-layout {
     grid-template-columns: 1fr;

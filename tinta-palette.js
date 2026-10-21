@@ -33,7 +33,7 @@
       s = l > .5 ? d / (2 - max - min) : d / (max + min);
       if (max === r) h = (g - b) / d + (g < b ? 6 : 0);
       else if (max === g) h = (b - r) / d + 2;
-      else h = (r - b) / d + 4;
+      else h = (r - g) / d + 4;
       h *= 60;
     }
     return [h, s, l];
@@ -89,6 +89,59 @@
       return rgb(c).map((v) => (v / 255).toFixed(3)).join(", ");
     }
     return c;
+  }
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+  function adjustmentValues() {
+    return {
+      hue: Number($("#hueAdjust").value),
+      temperature: Number($("#temperatureAdjust").value),
+      saturation: Number($("#saturationAdjust").value),
+      lightness: Number($("#lightnessAdjust").value),
+    };
+  }
+  function adjustColor(color, values) {
+    if (
+      values.hue === 0 && values.temperature === 0 &&
+      values.saturation === 0 && values.lightness === 0
+    ) return color;
+    let [h, s, l] = hsl(color);
+    h += values.hue;
+    s = clamp(s + values.saturation / 100, 0, 1);
+    l = clamp(l + values.lightness / 100, 0, 1);
+    let [r, g, b] = rgb(fromHsl(h, s, l));
+    // Valori positivi scaldano (più rosso/giallo), i negativi raffreddano.
+    let warmth = values.temperature * 0.85;
+    r = clamp(Math.round(r + warmth), 0, 255);
+    g = clamp(Math.round(g + warmth * 0.18), 0, 255);
+    b = clamp(Math.round(b - warmth), 0, 255);
+    return "#" + [r, g, b].map((v) =>
+      v.toString(16).padStart(2, "0")
+    ).join("").toUpperCase();
+  }
+  function adjustedColors() {
+    let values = adjustmentValues();
+    return colors.map((color) => adjustColor(color, values));
+  }
+  function miniPaletteMarkup(palette) {
+    return palette.map((color) =>
+      `<div class="mini-swatch" style="background:${color}"><span>${color}</span></div>`
+    ).join("");
+  }
+  function renderAdjustments() {
+    let values = adjustmentValues();
+    $("#hueAdjustValue").textContent = `${values.hue}°`;
+    $("#temperatureAdjustValue").textContent = values.temperature;
+    $("#saturationAdjustValue").textContent = `${values.saturation}%`;
+    $("#lightnessAdjustValue").textContent = `${values.lightness}%`;
+    $("#originalPalette").innerHTML = miniPaletteMarkup(colors);
+    $("#adjustedPalette").innerHTML = miniPaletteMarkup(adjustedColors());
+  }
+  function resetAdjustments() {
+    ["#hueAdjust", "#temperatureAdjust", "#saturationAdjust", "#lightnessAdjust"].forEach(
+      (selector) => $(selector).value = 0,
+    );
   }
   function toast(msg) {
     let el = $("#toast");
@@ -237,6 +290,7 @@
     $("#seed").value = colors[0];
     $("#seedHex").value = colors[0];
     fillContrast();
+    renderAdjustments();
   }
   function generate() {
     let n = Number($("#count").value),
@@ -272,12 +326,39 @@
             Math.max(.18, Math.min(.86, l + (i % 3 - 1) * .1)),
           ),
         );
+      } else if (mode === "splitComplementary") {
+        let hues = [h, h + 150, h + 210];
+        next.push(
+          fromHsl(
+            hues[i % hues.length] + Math.floor(i / hues.length) * 8,
+            Math.max(.35, s),
+            Math.max(.18, Math.min(.86, l + (i % 3 - 1) * .1)),
+          ),
+        );
       } else if (mode === "triadic") {
         next.push(
           fromHsl(
             h + (i % 3) * 120 + Math.floor(i / 3) * 7,
             Math.max(.3, s),
             Math.max(.2, Math.min(.85, l + (i % 2 ? .12 : -.1))),
+          ),
+        );
+      } else if (mode === "tetradic") {
+        let hues = [h, h + 60, h + 180, h + 240];
+        next.push(
+          fromHsl(
+            hues[i % hues.length] + Math.floor(i / hues.length) * 7,
+            Math.max(.3, s),
+            Math.max(.2, Math.min(.85, l + (i % 2 ? .1 : -.08))),
+          ),
+        );
+      } else if (mode === "square") {
+        let hues = [h, h + 90, h + 180, h + 270];
+        next.push(
+          fromHsl(
+            hues[i % hues.length] + Math.floor(i / hues.length) * 6,
+            Math.max(.3, s),
+            Math.max(.2, Math.min(.85, l + (i % 2 ? .1 : -.08))),
           ),
         );
       } else if (mode === "mono") {
@@ -527,6 +608,16 @@
     } else toast("Codice HEX non valido");
   };
   $("#saveBtn").onclick = save;
+  ["#hueAdjust", "#temperatureAdjust", "#saturationAdjust", "#lightnessAdjust"].forEach(
+    (selector) => $(selector).oninput = renderAdjustments,
+  );
+  $("#applyAdjustments").onclick = () => {
+    colors = adjustedColors();
+    locks = colors.map(() => false);
+    resetAdjustments();
+    render();
+    toast("Palette risultato impostata come corrente");
+  };
   $("#fg").onchange = updateContrast;
   $("#bg").onchange = updateContrast;
   $("#textSize").onchange = updateContrast;
