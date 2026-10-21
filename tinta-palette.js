@@ -307,14 +307,20 @@
         next.push(old[i]);
         continue;
       }
+      // Il colore di partenza è sempre il riferimento della nuova palette.
+      if (i === 0) {
+        next.push(seed);
+        continue;
+      }
       if (mode === "analogous") {
+        let distance = Math.ceil(i / 2), direction = i % 2 ? -1 : 1;
         next.push(
           fromHsl(
-            h + (i - (n - 1) / 2) * 24,
+            h + direction * distance * 24,
             Math.max(.25, s),
             Math.max(
               .18,
-              Math.min(.88, l + (i - (n - 1) / 2) * .06),
+              Math.min(.88, l + direction * distance * .06),
             ),
           ),
         );
@@ -606,6 +612,13 @@
       e.target.value = norm(e.target.value);
       $("#seed").value = e.target.value;
     } else toast("Codice HEX non valido");
+  };
+  $("#randomSeedBtn").onclick = () => {
+    let seed = "#" + Math.floor(Math.random() * 16777216).toString(16)
+      .padStart(6, "0").toUpperCase();
+    $("#seed").value = seed;
+    $("#seedHex").value = seed;
+    toast("Nuovo colore di partenza selezionato");
   };
   $("#saveBtn").onclick = save;
   ["#hueAdjust", "#temperatureAdjust", "#saturationAdjust", "#lightnessAdjust"].forEach(

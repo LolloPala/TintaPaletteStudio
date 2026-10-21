@@ -346,6 +346,12 @@ main {
   flex: 1;
   min-width: 0;
 }
+.color-input .random-seed {
+  flex: none;
+  padding: 9px 10px;
+  white-space: nowrap;
+  font-size: 12px;
+}
 .contrast-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
